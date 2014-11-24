@@ -41,10 +41,12 @@ Here is an example how to call the bash script from the command line:
 
 This call produces an image like this sample:
 
-![Example slices of a statistical map that represents the parameter estimate as color code and the corresponding z-value as hue. Significant clusters are indicated by contour lines and are shown with solid colors.](samplemap.png?raw=true)
+![Example slices of a statistical map that represents the parameter estimate as color code and the corresponding z-value as hue. Significant clusters are indicated by contour lines and are shown with solid colors.](samplemap.png?raw=true "Example slices of a statistical map that represents the parameter estimate as color code and the corresponding z-value as hue. Significant clusters are indicated by contour lines and are shown with solid colors.")
 
 Please cite the original paper of Allen, Erhardt, and Calhoun when using the scripts provided here: 
 
 **Elena A. Allen, Erik B. Erhardt, & Vince D. Calhoun** (2012). Data Visualization in the Neurosciences: Overcoming the Curse of Dimensionality. *Neuron* **74**, 603 - 608
 
 This Github repository is associated with this DOI: [![DOI](https://zenodo.org/badge/4883/wzinke/feat_dualcode.png)](http://dx.doi.org/10.5281/zenodo.12835)
+
+Please feel free to clone or fork this repository. Comments and bug reports are welcome.
