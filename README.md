@@ -7,7 +7,8 @@ They suggest a simple, yet thorough representation scheme for statistical maps t
 
 Allen et al. provide [example matlab code](http://mialab.mrn.org/datavis/docs/dualcodeExample.zip) that demonstrate an implementation of their representation scheme. This neat scheme was adapted here to cope with 3D nifti files. In addition to this, a wrapper BASH script is provided that allows to easily create dual coded images from an existing feat directory.
 
-The matlab script can be used on its own, only the first three arguments are mandatory, the others are optional::
+The matlab script can be used on its own, only the first three arguments are mandatory, the others are optional:
+
     dualcode_image(bckimg, statmap, betamap, ...
                   [sigmap, slcs, sldim, betarng, alpharng, bckrng, ofl, ip, scl])
 
