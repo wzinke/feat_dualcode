@@ -7,6 +7,39 @@ They suggest a simple, yet thorough representation scheme for statistical maps t
 
 Allen et al. provide [example matlab code](http://mialab.mrn.org/datavis/docs/dualcodeExample.zip) that demonstrate an implementation of their representation scheme. This neat scheme was adapted here to cope with 3D nifti files. In addition to this, a wrapper BASH script is provided that allows to easily create dual coded images from an existing feat directory.
 
+The matlab script can be used on its own, only the first three arguments are mandatory, the others are optional::
+    dualcode_image(bckimg, statmap, betamap, ...
+                  [sigmap, slcs, sldim, betarng, alpharng, bckrng, ofl, ip, scl])
+
+The Usage for the command line script is as follows: 
+
+    Usage: $0 <featdir> <contnum> <ofl> [options]
+    
+    OPTIONS:
+            -bck     use different volume as background (must have same geometry)
+            -fac     scaling factor to convert copes to something more like PSC
+            -mask    apply mask to statistical images
+            -dim     slice dimension
+            -slc     slices to print
+                     numbers less than 1 indicate proportional slice numbers
+            -s       scaling factor (default: 2)
+            -ip      image interpolation (default: 2)
+            -zthr    set upper z-threshold (default uses design.fsf)
+            -p       cluster p-value (default: 0.01)
+                     will rerun cluster threshold
+            -2s      run two sided test
+                     will rerun cluster threshold
+            -beta    set upper threshold for the beta image
+            -sig     use alternative mask to select significant voxel
+            -brng    set intensity range for background
+            -thick   increase width of slice line
+            -keep    do not delete temporary files (for debugging)
+
+Here is an example how to call the bash script from the command line:
+    dualcode $featdir/cope1.feat samplemap -2s -zthr 3.2 -p 0.01 -bck $FSLDIR/data/standard/MNI152_T1_2mm_brain-s 2 -ip 2 -slc $(seq 0.3 0.05 0.75)-dim z
+
+This call produces an image like this sample:
+
 ![Example slices of a statistical map that represents the parameter estimate as color code and the corresponding z-value as hue. Significant clusters are indicated by contour lines and are shown with solid colors.](samplemap.png?raw=true)
 
 Please cite the original paper of Allen, Erhardt, and Calhoun when using the scripts provided here: 
