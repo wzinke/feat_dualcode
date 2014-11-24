@@ -3,11 +3,29 @@ function dualcode_image(bckimg, statmap, betamap, sigmap, slcs, sldim, betarng, 
 % as color map, and use the image alpha value as hue to represent statistical
 % significance. A binary map selects significant voxels that are highlighted
 % as contour and displayed as solid color.
-
+%
 % inspired by the dualcodeImage function of E. A. Allen (http://mialab.mrn.org/datavis/)
 %     Elena A. Allen, Erik B. Erhardt, & Vince D. Calhoun (2012)
 %     Data Visualization in the Neurosciences: Overcoming the Curse of Dimensionality
 %     Neuron 74, 603 - 608
+%
+%
+% required arguments:
+%    bckimg   - file name of the background image, it has to have the same dimensions as the statistical map.
+%    statmap  - nifti file with statistical values (z-map is assumed)
+%    betamap  - nifti file with the beta values/effect sizes
+%
+% optional arguments
+%    sigmap   - binary volume that selects significant volues
+%               (if not provided, voxels > 2.3 are assumed to be significant)
+%    slcs     - a vector of slice positions (in voxel coordinates or relative coordinates, default: 0.5 )
+%    sldim    - dimension of the image slice (x, y, or z, default: z)
+%    betarng  - scale for the parameter estimate range (color), default uses the 0.99 percentiles
+%    alpharng - scale for the statistical value range (hue), default uses the 0.99 percentiles
+%    bckrng   - scale for the image intensity of the background image, default uses the 0.98 percentiles
+%    ofl      - file name for the output image. If not specified, the figure is shown on screen only.
+%    ip       - image interpolation factor (default: 1)
+%    scl      - image scale factor
 %
 % wolf zinke, Sep. 2014
 
