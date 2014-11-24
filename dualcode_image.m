@@ -28,6 +28,9 @@ function dualcode_image(bckimg, statmap, betamap, sigmap, slcs, sldim, betarng, 
 %    scl      - image scale factor
 %
 % wolf zinke, Sep. 2014
+%
+% ToDo: 
+%      - add option to select or specify color map.
 
 %% check inputs and load nifti files
 %% get slices
