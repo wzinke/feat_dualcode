@@ -42,9 +42,7 @@ Here is an example how to call the bash script from the command line:
     dualcode $featdir/cope1.feat samplemap -2s -zthr 3.2 -p 0.01 -bck $FSLDIR/data/standard/MNI152_T1_2mm_brain-s 2 -ip 2 -slc $(seq 0.3 0.05 0.75)-dim z
 ```
 
-This call produces an image like this sample:
 
-![Example slices of a statistical map that represents the parameter estimate as color code and the corresponding z-value as hue. Significant clusters are indicated by contour lines and are shown with solid colors.](samplemap.png?raw=true "Example slices of a statistical map that represents the parameter estimate as color code and the corresponding z-value as hue. Significant clusters are indicated by contour lines and are shown with solid colors.")
 
 Please cite the original paper of Allen, Erhardt, and Calhoun when using the scripts provided here: 
 
