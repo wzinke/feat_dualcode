@@ -1,8 +1,8 @@
 function dualcode_image(bckimg, statmap, betamap, sigmap, slcs, sldim, betarng, alpharng, bckrng, ofl, ip, scl)
 % Create overlay images that display the effect size (parameter estimate)
-% as color map, and use the image alpha value as hue to represent statistical
+% as colour map, and use the image alpha value as hue to represent statistical
 % significance. A binary map selects significant voxels that are highlighted
-% as contour and displayed as solid color.
+% as contour and displayed as solid colour.
 %
 % inspired by the dualcodeImage function of E. A. Allen (http://mialab.mrn.org/datavis/)
 %     Elena A. Allen, Erik B. Erhardt, & Vince D. Calhoun (2012)
@@ -16,11 +16,11 @@ function dualcode_image(bckimg, statmap, betamap, sigmap, slcs, sldim, betarng, 
 %    betamap  - nifti file with the beta values/effect sizes
 %
 % optional arguments
-%    sigmap   - binary volume that selects significant volues
+%    sigmap   - binary volume that selects significant values
 %               (if not provided, voxels > 2.3 are assumed to be significant)
 %    slcs     - a vector of slice positions (in voxel coordinates or relative coordinates, default: 0.5 )
 %    sldim    - dimension of the image slice (x, y, or z, default: z)
-%    betarng  - scale for the parameter estimate range (color), default uses the 0.99 percentiles
+%    betarng  - scale for the parameter estimate range (colour), default uses the 0.99 percentiles
 %    alpharng - scale for the statistical value range (hue), default uses the 0.99 percentiles
 %    bckrng   - scale for the image intensity of the background image, default uses the 0.98 percentiles
 %    ofl      - file name for the output image. If not specified, the figure is shown on screen only.
@@ -29,7 +29,7 @@ function dualcode_image(bckimg, statmap, betamap, sigmap, slcs, sldim, betarng, 
 %
 % wolf zinke, Sep. 2014
 %
-% ToDo: 
+% ToDo:
 %      - add option to select or specify color map.
 
 %% check inputs and load nifti files
@@ -115,7 +115,7 @@ switch lower(sldim)
         if(any(slcs > dims(1)))
             error('Slice exceeds number of slices in volume');
         end
-        
+
         y=1:dims(2);
         z=1:dims(3);
     case 'y'
@@ -238,13 +238,13 @@ for(i = 1:length(slcs))
     if(sum(ipSIG(:)) > 0)
         contour(ipSIG, 1, 'k', 'LineWidth', (ip+1)/2);
     end
-    
+
     axis off;
     axis image;
 
     %% save file
     if(~isempty(ofl))
-        cfl = [ofl,'_', upper(sldim),int2str(slcs(i)),'.png'];
+        cfl = [ofl,'_', upper(sldim),sprintf('%04d', slcs(i)),'.png'];
         hgexport(F, cfl, hgexport('factorystyle'), 'Format', 'png');
         % print(F, cfl,'-dpng','-r0');
         crop(cfl, 0, 0); % get rid of the white margins Matlab added to the image frame
@@ -374,7 +374,7 @@ function cmap = twowaycol(m)
     colmat = [32,96,255; 32,159,255; 32,191,255; 0,207,255; 42,255,255; 85,255,255; ...
               127,255,255; 170,255,255; 255,255,84; 255,240,0; 255,191,0; 255,168,0; ...
               255,138,0; 255,112,0; 255,77,0; 255,0,0] ./ 255;
-% 
+%
 %       sunsetred = [174, 208, 210, 237, 245, 249, 255, 255, 230, 180, 153, 119, 58, 0, 61];
 %       sunsetgreen = [28, 50, 77, 135, 162, 189, 227, 250, 245, 221, 199, 183, 137, 139, 82];
 %       sunsetblue = [62, 50, 62, 94, 117, 126, 170, 210, 254, 247, 236, 229, 201, 206, 161];
@@ -391,7 +391,7 @@ function cmap = twowaycol(m)
 %               0.525490 0.850980 1.000000;0.611765 0.933333 1.000000;0.686275 0.960784 1.000000;0.807843 1.000000 1.000000; ...
 %               1.000000 0.996078 0.278431;1.000000 0.921569 0.000000;1.000000 0.768627 0.000000;1.000000 0.564706 0.000000; ...
 %               1.000000 0.282353 0.000000;1.000000 0.000000 0.000000;0.835294 0.000000 0.000000;0.619608 0.000000 0.000000];
-% 
+%
     % % cmp_flux  (CLEAR)
 %     colmat = [0 253 253;  8 222 253;  16 189 253;  24 157 253;  32 125 253;  40 93 253;  48 60 253;  85 85 253;  133 133 253;  181 181 253; ...
 %     230 230 253;  253 230 230;  253 181 181;  253 133 133;  253 85 85;  253 60 48;  253 93 40;  253 125 32;  253 157 24;  253 189 16; ...
@@ -401,7 +401,7 @@ function cmap = twowaycol(m)
 %     colmat = flipud([175  53  71; 216  82  88; 239 133 122; 245 177 139; 249 216 168; 242 238 197;
 %                      216 236 241; 154 217 238; 68 199 239; 0 170 226; 0 116 188]/255);
 
-    cmap = interp1(linspace(0,1,size(colmat,1)),colmat,linspace(0,1,m),'cubic');
+    cmap = interp1(linspace(0,1,size(colmat,1)),colmat,linspace(0,1,m),'pchip');
 
 
 %--------------------------------------------------------------------------
@@ -410,7 +410,7 @@ function cmap = twowaycol(m)
 % thanks to Andy Bliss for putting this on File Excahnge
 % http://www.mathworks.com/matlabcentral/fileexchange/20427-crop-whitespace-from-an-image
 %
-% For ease, this code is implemented here as nested function. Check the link above for the 
+% For ease, this code is implemented here as nested function. Check the link above for the
 % original code.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -418,17 +418,17 @@ function cmap = twowaycol(m)
 %
 %  %  Copyright (c) 2008, Andrew Bliss
 %  %  All rights reserved.
-%  %  
+%  %
 %  %  Redistribution and use in source and binary forms, with or without
 %  %  modification, are permitted provided that the following conditions are
 %  %  met:
-%  %  
+%  %
 %  %      * Redistributions of source code must retain the above copyright
 %  %        notice, this list of conditions and the following disclaimer.
 %  %      * Redistributions in binary form must reproduce the above copyright
 %  %        notice, this list of conditions and the following disclaimer in
 %  %        the documentation and/or other materials provided with the distribution
-%  %  
+%  %
 %  %  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 %  %  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 %  %  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE

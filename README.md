@@ -12,10 +12,10 @@ The matlab script can be used on its own, only the first three arguments are man
     dualcode_image(bckimg, statmap, betamap, ...
                   [sigmap, slcs, sldim, betarng, alpharng, bckrng, ofl, ip, scl])
 
-The Usage for the command line script is as follows: 
+The Usage for the command line script is as follows:
 
     Usage: $0 <featdir> <contnum> <ofl> [options]
-    
+
     OPTIONS:
             -bck     use different volume as background (must have same geometry)
             -fac     scaling factor to convert copes to something more like PSC
@@ -46,7 +46,8 @@ This call produces an image like this sample:
 
 ![Example slices of a statistical map that represents the parameter estimate as color code and the corresponding z-value as hue. Significant clusters are indicated by contour lines and are shown with solid colors.](samplemap.png?raw=true "Example slices of a statistical map that represents the parameter estimate as color code and the corresponding z-value as hue. Significant clusters are indicated by contour lines and are shown with solid colors.")
 
-Please cite the original paper of Allen, Erhardt, and Calhoun when using the scripts provided here: 
+
+Please cite the original paper of Allen, Erhardt, and Calhoun when using the scripts provided here:
 
 **Elena A. Allen, Erik B. Erhardt, & Vince D. Calhoun** (2012). Data Visualization in the Neurosciences: Overcoming the Curse of Dimensionality. *Neuron* **74**, 603 - 608
 

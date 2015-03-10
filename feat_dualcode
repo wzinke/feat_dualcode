@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# dualcode
+# feat_dualcode
 #
 # created: 02.09.2014
 # by zinke
@@ -15,34 +15,36 @@
 Usage() {
 cat << EOF
 
-    Usage: $0 <statmap> <betamap> <ofl> [options]
+    Usage: $0 <featdir> <contnum> <ofl> [options]
 
-    Create a statistical map using the dual code approach suggested by Allen et al.
-
-    This is a wrapper function to create dual coded images from the command line.
+    Create a statistical map using the dual code approach suggested by Allen et al. This
+    wrapper uses the data found in a feat directory after running a GLM analysis with FSL's
+    FEAT tool.
 
         Elena A. Allen, Erik B. Erhardt, & Vince D. Calhoun (2012)
         Data Visualization in the Neurosciences: Overcoming the Curse of Dimensionality
         Neuron 74, 603 - 608
 
     OPTIONS:
-            -bck     specify background image (default uses FSL's MNI152 template)
+            -bck     use different volume as background (must have same geometry)
+            -fac     scaling factor to convert copes to something more like PSC
             -mask    apply mask to statistical images
             -dim     slice dimension
             -slc     slices to print
                      numbers less than 1 indicate proportional slice numbers
             -s       scaling factor (default: 2)
             -ip      image interpolation (default: 2)
-            -zthr    set upper z-threshold (default: 2.3)
+            -zthr    set upper z-threshold (default uses design.fsf)
             -p       cluster p-value (default: 0.01)
                      will rerun cluster threshold
             -2s      run two sided test
-                     this will rerun cluster thresholding
+                     will rerun cluster threshold
             -beta    set upper threshold for the beta image
             -sig     use alternative mask to select significant voxel
             -brng    set intensity range for background
             -thick   increase width of slice line
             -keep    do not delete temporary files (for debugging)
+
 
             ###########################################################
             ##   (c) wolf zinke (2014) - part of the MaFIA toolbox   ##
@@ -58,16 +60,11 @@ exit 1
 if [ $# -lt 3 ]; then
     Usage
 else
-    statmap=$(remove_ext $1)
-    betamap=$(remove_ext $2)
+    featdir=$1
+    statnum=$2
     ostem=$3
     shift 3
 fi
-
-flext=.nii.gz # hard coded right now, need to correct
-
-# flext=$( ls $statmap.* | sed -e "s/$statmap//g")
-# echo $flext
 
 #__________________________________________________________________________________________#
 rtpath=$(dirname `which $0`)
@@ -77,22 +74,36 @@ rm $tmpdir
 mkdir -p $tmpdir/slices
 
 #__________________________________________________________________________________________#
+# define volumes according to the feat data
+bckimg=$(remove_ext $featdir/example_func)
+statmap=$(remove_ext $featdir/stats/zstat$statnum)
+betamap=$(remove_ext $featdir/stats/cope$statnum)
+maskimg=$(remove_ext $featdir/mask)
+
+fslmaths $featdir/thresh_zstat$statnum -bin $tmpdir/sigmap -odt char
+sigmap=$tmpdir/sigmap
+
+alph=$(cat $featdir/design.fsf | grep z_thresh | cut -d')' -f2)
+beta='[]'
+
+bckstem=$(basename $bckimg)
+flext=$(basename $(ls $bckimg.*) | sed -e "s/$bckstem//g")
+
+#__________________________________________________________________________________________#
 
 slcset="0.2 0.3 0.4 0.5 0.6 0.7 0.8"
 slcdim='Z'
-bckimg=$FSLDIR/data/standard/MNI152lin_T1_2mm_brain
 bckrng='4000 8000'
 ip=2
 scl=2
+sclfac=0
 do_mask=0
 do_keep=0
 slcwdth=1
 do_thick=0
-pthr=0.05
+pthr=0.01
 twoside=0
-do_clust=1
-alph=2.3
-beta='[]'
+do_clust=0
 
 while [ $# -gt 0 ] ;
 do
@@ -103,16 +114,21 @@ do
         -slc)   slcset=$2
                 shift 2
                 ;;
-         -s)    scl=$2
+        -fac)   sclfac=$2
+                shift 2
+                ;;
+         -s)   scl=$2
                 shift 2
                 ;;
          -ip)   ip=$2
                 shift 2
                 ;;
          -p)    pthr=$2
+                do_clust=1
                 shift 2
                 ;;
         -2s)    twoside=1
+                do_clust=1
                 shift
                 ;;
       -zthr)    alph=$2
@@ -122,7 +138,6 @@ do
                 shift 2
                 ;;
         -sig)   sigmap=$(remove_ext $2)
-                do_clust=0
                 shift 2
                 ;;
         -bck)   bckimg=$(remove_ext $2)
@@ -131,7 +146,8 @@ do
        -brng)   bckrng="$2 $3"
                 shift 3
                 ;;
-       -mask)   maskimg=$2
+       -mask)   fslmaths $maskimg -mul $2 -bin $tmpdir/mask -odt char
+                maskimg=$tmpdir/mask
                 do_mask=1
                 shift 2
                 ;;
@@ -152,19 +168,8 @@ do
     esac
 done
 
-
-if [ $do_mask -eq 1 ]
-then
-    fslmaths $bckimg -mul $maskimg -bin $tmpdir/mask -odt char
-else
-    fslmaths $bckimg -bin $tmpdir/mask -odt char
-fi
-
-maskimg=$tmpdir/mask
-
 #__________________________________________________________________________________________#
 # apply cluster thresholding
-
 if [ $do_clust -eq 1 ]
 then
     smth=$(cat $featdir/stats/smoothness | cut -d' ' -f2 | head -1)
@@ -185,6 +190,13 @@ then
     sigmap=$tmpdir/stat_thr
 fi
 
+#__________________________________________________________________________________________#
+# rescale the parameter estimates
+if [ $sclfac -ne 0 ]
+then
+    fslmaths $betamap -mul $sclfac $tmpdir/beta_scl
+    betamap=$tmpdir/beta_scl
+fi
 
 #__________________________________________________________________________________________#
 # apply mask
