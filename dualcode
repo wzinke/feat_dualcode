@@ -29,7 +29,7 @@ cat << EOF
             -bck     specify background image (default uses FSL's MNI152 template)
             -mask    apply mask to statistical images
             -dim     slice dimension
-            -slc     slices to print
+            -slc     slices to print (voxel index starts with 0)
                      numbers less than 1 indicate proportional slice numbers
             -s       scaling factor (default: 2)
             -ip      image interpolation (default: 2)
@@ -185,7 +185,6 @@ then
     sigmap=$tmpdir/stat_thr
 fi
 
-
 #__________________________________________________________________________________________#
 # apply mask
 if [ $do_mask -eq 1 ]
@@ -272,18 +271,18 @@ esac
 
 origVXL=$(echo "$origMM / $DimSZ" | bc -l | awk '{ printf  "%.0f\n", $0 }')
 
-pngappend $tmpdir/sel1.png - 0    $tmpdir/sel2.png $tmpdir/SelSlc.png
+pngappend $tmpdir/sel1.png - 0 $tmpdir/sel2.png $tmpdir/SelSlc.png
 
 png_str="$png_str $tmpdir/Zset.png"
 
 #__________________________________________________________________________________________#
 ### call matlab
-echo "addpath('$rtpath'); dualcode_image('$bckimg$flext', '$statmap$flext', '$betamap$flext', '$sigmap$flext', [$slcset], '$slcdim', $beta, $alph, [$bckrng], '$tmpdir/slices/slc', $ip, $scl); exit;" | matlab -nodesktop -nosplash
+echo "addpath('$rtpath'); dualcode_image('$bckimg$flext', '$statmap$flext', '$betamap$flext', '$sigmap$flext', [$slcset], '$slcdim', $beta, $alph, [$bckrng], '$tmpdir/slices/slc', $ip, $scl); exit;" | matlab -nodesktop -nojvm -nosplash  > /dev/null 2>&1
 echo ""
 
 #__________________________________________________________________________________________#
 # merge images
-ptsz=`echo "$DimSZ * 0.2" | bc -l | xargs printf "%1.0f"`
+ptsz=$(echo "$DimSZ * 0.2" | bc -l | xargs printf "%1.0f")
 
 if [ $ptsz -lt 10 ]
 then

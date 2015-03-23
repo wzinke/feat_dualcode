@@ -18,7 +18,8 @@ function dualcode_image(bckimg, statmap, betamap, sigmap, slcs, sldim, betarng, 
 % optional arguments
 %    sigmap   - binary volume that selects significant values
 %               (if not provided, voxels > 2.3 are assumed to be significant)
-%    slcs     - a vector of slice positions (in voxel coordinates or relative coordinates, default: 0.5 )
+%    slcs     - a vector of slice positions (in voxel coordinates starting count with 0,
+%                                            or relative coordinates, default: 0.5 )
 %    sldim    - dimension of the image slice (x, y, or z, default: z)
 %    betarng  - scale for the parameter estimate range (colour), default uses the 0.99 percentiles
 %    alpharng - scale for the statistical value range (hue), default uses the 0.99 percentiles
@@ -110,6 +111,8 @@ switch lower(sldim)
     case 'x'
         if(any(slcs < 1))
             slcs = ceil(dims(1) * slcs);
+        else
+            slcs = slcs + 1; % correct for counting origin: voxels starts at 0, Matlab starts with 1
         end
         x = slcs;
         if(any(slcs > dims(1)))
@@ -121,6 +124,8 @@ switch lower(sldim)
     case 'y'
         if(any(slcs < 1))
             slcs = ceil(dims(2) * slcs);
+        else
+            slcs = slcs + 1; % correct for counting origin: voxels starts at 0, Matlab starts with 1
         end
         y = slcs;
         if(any(slcs > dims(2)))
@@ -131,6 +136,8 @@ switch lower(sldim)
     case 'z'
         if(any(slcs < 1))
             slcs = ceil(dims(3) * slcs);
+        else
+            slcs = slcs + 1; % correct for counting origin: voxels starts at 0, Matlab starts with 1
         end
         z = slcs;
             if(any(slcs > dims(3)))
@@ -205,7 +212,8 @@ for(i = 1:length(slcs))
         ipSIG    = rot90(squeeze(SMAP(x,y,z)));
     end
 
-    CM_under = bone(256);      % colormap for the underlay (anatomical)
+%      CM_under = bone(256);      % colormap for the underlay (anatomical)
+    CM_under = gray(256);      % colormap for the underlay (anatomical)
     CM_over  = twowaycol(256); % color map for the effect size
 
     U_RGB = convert_to_RGB(ipBCK, CM_under, B_range);

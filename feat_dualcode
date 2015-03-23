@@ -30,7 +30,7 @@ cat << EOF
             -fac     scaling factor to convert copes to something more like PSC
             -mask    apply mask to statistical images
             -dim     slice dimension
-            -slc     slices to print
+            -slc     slices to print (voxel index starts with 0)
                      numbers less than 1 indicate proportional slice numbers
             -s       scaling factor (default: 2)
             -ip      image interpolation (default: 2)
