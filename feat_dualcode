@@ -191,8 +191,8 @@ then
 fi
 
 #__________________________________________________________________________________________#
-# rescale the parameter estimates
-if [ $sclfac -ne 0 ]
+# re-scale the parameter estimates
+if [ $(echo "$sclfac != 0" | bc -l) -eq 1 ]
 then
     fslmaths $betamap -mul $sclfac $tmpdir/beta_scl
     betamap=$tmpdir/beta_scl
